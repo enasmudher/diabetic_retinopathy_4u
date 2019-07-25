@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+	* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+  background-color:black;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-align: center;
+  font-size: 20px;
+  color: white;
+}
+nav {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  background: #ccc;
+  padding: 20px;
+}
+
+/* Style the list inside the menu */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Style the content */
+article {
+  -webkit-flex: 3;
+  -ms-flex: 3;
+  flex: 3;
+  background-color: #f1f1f1;
+  padding: 10px;
+}
+.tablink {
+  background-color: #555;
+  color: white;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 25px;
+  font-size: 20px;
+  width: 20%;
+}
+
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Style the tab content */
+.tabcontent {
+  color: white;
+  display: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+}
+section {
+  display: -webkit-flex;
+  display: flex;
+}
+
+/* Style the navigation menu */
+nav {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  background: #ccc;
+  padding: 20px;
+}
+
+/* Style the list inside the menu */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+footer {
+  background-color: #777;
+  padding: 5px;
+  text-align: center;
+  color: white;
+}
+
+
+</style>
+</head>
+<body>
+
+<header><center><img src="http://www.ven.com.tr/ven/data/haber/large/1420726316.jpeg" width="150" height="150"></center>
+
+	<h2>Web Application Of </h2>
+	<h2>Diabetic Retinopathy Classification Using</h2>
+	<h3>Keras And API Tensorflow of Pre-trained Deep Learning Models</h3></header>
+	
+
+
+<button class="tablink"  id="defaultOpen">Normal:&nbsp;&nbsp; <span id="Normal-prediction"></span></button>
+<button class="tablink" id="defaultOpen">Mild:&nbsp;&nbsp; <span id="Mild-prediction"></span></button>
+<button class="tablink" id="defaultOpen">Moderate:&nbsp;&nbsp; <span id="Moderate-prediction"></span></button>
+<button class="tablink" id="defaultOpen">Severe:&nbsp;&nbsp; <span id="Severe-prediction"></span></button>
+<button class="tablink" id="defaultOpen">PDR:&nbsp;&nbsp; <span id="PDR-prediction"></span></button>
+
+
+<setion>		
+		<nav>
+				<ul>
+				  <li><input id="image-selector" type="file"></li>
+				  <li><button id="predict-button">Predict</button></li>
+				  
+				</ul>
+			  </nav>	
+			
+	    		
+     
+
+	<center><img id="selected-image" src=""width="300" height="300"></center>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+	let base64Image;
+	$("#image-selector").change(function() {
+		let reader = new FileReader();
+		reader.onload = function(e) {
+			let dataURL = reader.result;
+			$('#selected-image').attr("src",dataURL);
+			base64Image = dataURL.replace("data:image/jpeg;base64,","");
+			console.log(base64Image);
+		}
+reader.readAsDataURL($("#image-selector")[0].files[0]);
+$("#Normal-prediction").text("");
+$("#Mild-prediction").text("");
+$("#Moderate-prediction").text("");
+$("#Severe-prediction").text("");
+$("#PDR-prediction").text("");
+});
+$("#predict-button").click(function(event){
+	let message = {
+	image: base64Image
+	}
+console.log(message);
+$.post("http://127.0.0.1:5000/predict",JSON.stringify(message),function(response){
+$("#Normal-prediction").text(response.Normal);
+$("#Mild-prediction").text(response.Mild);
+$("#Moderate-prediction").text(response.Moderate);
+$("#Severe-prediction").text(response.Severe);
+$("#PDR-prediction").text(response.PDR);
+console.log(response);
+});
+});
+</script>
+</setion>	
+<footer>
+		<p>By Inas Al-Kamachy</p>
+	  </footer>
+</body>
+</html>
